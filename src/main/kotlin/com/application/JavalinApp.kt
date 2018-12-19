@@ -28,7 +28,6 @@ class JavalinApp(private val port: Int) {
         return app
     }
 
-
 }
 
 fun main(args: Array<String>) {
