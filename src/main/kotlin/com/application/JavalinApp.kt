@@ -1,14 +1,13 @@
+@file:JvmName("EntryPoint")
 package com.application
 
 import com.application.controller.UserController
+import com.application.persistence.DatabaseFactory
 import io.javalin.Javalin
-import io.javalin.apibuilder.ApiBuilder
-import io.javalin.apibuilder.ApiBuilder.get
 import io.javalin.apibuilder.ApiBuilder.path
+import io.javalin.apibuilder.ApiBuilder.post
 
 class JavalinApp(private val port: Int) {
-
-    val controller = UserController(users)
 
     fun init(): Javalin {
         val app = Javalin.create().apply {
@@ -21,11 +20,7 @@ class JavalinApp(private val port: Int) {
         app.routes {
             path("api") {
                 path("users") {
-                    path(":id") {
-                        get {
-                            ctx -> controller.getUser(ctx)
-                        }
-                    }
+                    post(UserController::createUser)
                 }
             }
         }
@@ -37,5 +32,6 @@ class JavalinApp(private val port: Int) {
 }
 
 fun main(args: Array<String>) {
+    DatabaseFactory.init()
     JavalinApp(7000).init()
 }

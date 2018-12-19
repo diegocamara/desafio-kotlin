@@ -1,11 +1,14 @@
 plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.3.11'
+    id "org.flywaydb.flyway" version "5.2.4"
+    id "application"
 }
 
 group 'org'
 version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
+apply plugin: 'org.flywaydb.flyway'
 
 repositories {
     mavenCentral()
@@ -18,8 +21,20 @@ dependencies {
     compile "org.slf4j:slf4j-simple:1.7.25"
     compile "com.fasterxml.jackson.module:jackson-module-kotlin:2.9.+"
     compile 'io.javalin:javalin:2.4.0'
+    compile 'org.jetbrains.exposed:exposed:0.11.2'
+    compile group: 'com.h2database', name: 'h2', version: '1.4.197'
+    compile group: 'com.zaxxer', name: 'HikariCP', version: '3.2.0'
     testCompile 'junit:junit:4.12'
     testCompile 'khttp:khttp:0.1.0'
+}
+
+flyway {
+    url = 'jdbc:h2:mem:testdb'
+    user = 'sa'
+}
+
+application {
+    mainClassName = "com.application.EntryPoint"
 }
 
 compileKotlin {
