@@ -15,18 +15,18 @@ class UserDAO {
                 name = newUser.name
                 email = newUser.email
                 password = newUser.password.toString()
-//                created = newUser.created
-//                modified = newUser.modified
-//                lastLogin = newUser.lastLogin
+        //                created = newUser.created
+        //                modified = newUser.modified
+        //                lastLogin = newUser.lastLogin
                 token = newUser.token
             }
             UserDTO(
                 id = storedUser.id.value,
                 name = storedUser.name,
                 email = storedUser.email,
-//                created = storedUser.created,
-//                modified = storedUser.modified,
-//                lastLogin = storedUser.lastLogin,
+        //                created = storedUser.created,
+        //                modified = storedUser.modified,
+        //                lastLogin = storedUser.lastLogin,
                 token = storedUser.token
             )
         }
