@@ -1,8 +1,9 @@
 @file:JvmName("EntryPoint")
 package com.application
 
+import com.application.config.mapper.configureMapper
 import com.application.controller.UserController
-import com.application.persistence.DatabaseFactory
+import com.application.config.persistence.DatabaseFactory
 import io.javalin.Javalin
 import io.javalin.apibuilder.ApiBuilder.path
 import io.javalin.apibuilder.ApiBuilder.post
@@ -10,6 +11,7 @@ import io.javalin.apibuilder.ApiBuilder.post
 class JavalinApp(private val port: Int) {
 
     fun init(): Javalin {
+        configureMapper()
         val app = Javalin.create().apply {
             port(port)
             exception(Exception::class.java) { e, _ -> e.printStackTrace() }

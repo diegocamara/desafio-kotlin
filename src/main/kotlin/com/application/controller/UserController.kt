@@ -1,25 +1,23 @@
 package com.application.controller
 
-import com.application.User
-import com.application.users
+
+import com.application.dao.UserDAO
+import com.application.domain.User
+import com.application.domain.UserDTO
+import com.application.service.UserService
 import io.javalin.Context
-import java.time.LocalDate
-import java.util.*
 
 object UserController {
 
+    private val userService: UserService = UserService(UserDAO())
+
     fun createUser(ctx: Context){
-        val userCreated = ctx.body<User>()
-        userCreated.id = randomId()
-        val createDate = LocalDate.now()
-        userCreated.created = createDate
-        userCreated.modified = createDate
-        userCreated.lastLogin = createDate
-        users[userCreated.id.toString()] = userCreated
+        val user = ctx.body<UserDTO>()
+        val userCreated = userService.createUser(user)
         ctx.json(userCreated).status(201)
     }
 
-    private fun randomId() = UUID.randomUUID().toString()
+
 
 }
 
