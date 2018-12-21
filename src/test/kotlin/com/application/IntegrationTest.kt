@@ -8,7 +8,7 @@ import io.javalin.Javalin
 import io.javalin.json.JavalinJackson
 import junit.framework.TestCase
 
-class IntegrationTest : TestCase() {
+class RestIntegrationTest : TestCase() {
 
     private lateinit var app: Javalin
     private val url = "http://localhost:7000"
