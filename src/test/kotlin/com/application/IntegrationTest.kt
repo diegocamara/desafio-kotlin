@@ -4,6 +4,7 @@ import com.application.config.exception.response.ApplicationErrorResponse
 import com.application.config.persistence.DatabaseFactory
 import com.application.domain.PhoneDTO
 import com.application.domain.UserDTO
+import com.application.dto.LoginDTO
 import com.application.util.toJsonObject
 import io.javalin.Javalin
 import io.javalin.json.JavalinJackson
@@ -61,7 +62,7 @@ class RestIntegrationTest : TestCase() {
         val jsonBody = JavalinJackson.getObjectMapper().writeValueAsString(user)
         val response = khttp.post(url = "$url/api/users", data = jsonBody)
         val applicationErrorResponse = response.text.toJsonObject(ApplicationErrorResponse::class.java)
-        assertEquals("Request body as UserDTO invalid - Campo nome obrigatório", applicationErrorResponse.mensagem)
+        assertEquals("Campo nome obrigatório", applicationErrorResponse.mensagem)
     }
 
     fun `testar validar campo email não preenchido`() {
@@ -69,7 +70,7 @@ class RestIntegrationTest : TestCase() {
         val jsonBody = JavalinJackson.getObjectMapper().writeValueAsString(user)
         val response = khttp.post(url = "$url/api/users", data = jsonBody)
         val applicationErrorResponse = response.text.toJsonObject(ApplicationErrorResponse::class.java)
-        assertEquals("Request body as UserDTO invalid - Campo email obrigatório", applicationErrorResponse.mensagem)
+        assertEquals("Campo email obrigatório", applicationErrorResponse.mensagem)
     }
 
     fun `testar validar campo password não preenchido`() {
@@ -77,8 +78,45 @@ class RestIntegrationTest : TestCase() {
         val jsonBody = JavalinJackson.getObjectMapper().writeValueAsString(user)
         val response = khttp.post(url = "$url/api/users", data = jsonBody)
         val applicationErrorResponse = response.text.toJsonObject(ApplicationErrorResponse::class.java)
-        assertEquals("Request body as UserDTO invalid - Campo password obrigatório", applicationErrorResponse.mensagem)
+        assertEquals("Campo password obrigatório", applicationErrorResponse.mensagem)
     }
+
+    fun `testar validar campo de email não preenchido no login`(){
+        val loginDTO = LoginDTO(password = "123")
+        val loginDTOJson = JavalinJackson.getObjectMapper().writeValueAsString(loginDTO)
+        val response = khttp.post(url = "$url/api/login", data = loginDTOJson)
+        val applicationErrorResponse = response.text.toJsonObject(ApplicationErrorResponse::class.java)
+        assertEquals("Campo email deve ser preenchido", applicationErrorResponse.mensagem)
+    }
+
+    fun `testar validar campo de password não preenchido no login`(){
+        val loginDTO = LoginDTO(email = "user@mail.com")
+        val loginDTOJson = JavalinJackson.getObjectMapper().writeValueAsString(loginDTO)
+        val response = khttp.post(url = "$url/api/login", data = loginDTOJson)
+        val applicationErrorResponse = response.text.toJsonObject(ApplicationErrorResponse::class.java)
+        assertEquals("Campo password deve ser preenchido", applicationErrorResponse.mensagem)
+    }
+
+    fun `testar se o usuário criado é o mesmo retornado pelo login`(){
+
+        // cria um usuário
+        val phones = listOf(PhoneDTO(ddd = "99", number = "99999999"))
+        val user = UserDTO(name = "User", email = "user123@email.com", password = "showtime123", phones = phones)
+        val userJson = JavalinJackson.getObjectMapper().writeValueAsString(user)
+        val userCreatedResponse = khttp.post(url = "$url/api/users", data = userJson)
+        val userCreated = userCreatedResponse.text.toJsonObject(UserDTO::class.java)
+
+        val loginDTO = LoginDTO(email = user.email, password = user.password)
+
+        val loginJson = JavalinJackson.getObjectMapper().writeValueAsString(loginDTO)
+        val loginResponse = khttp.post(url = "$url/api/login", data = loginJson)
+        val userLogged = loginResponse.text.toJsonObject(UserDTO::class.java)
+
+        assertEquals(userCreated, userLogged)
+
+    }
+
+
 
 }
 

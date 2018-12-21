@@ -4,6 +4,7 @@ package com.application
 import com.application.config.exception.handler.ExceptionHandler
 import com.application.config.mapper.configureMapper
 import com.application.config.persistence.DatabaseFactory
+import com.application.controller.LoginController
 import com.application.controller.UserController
 import io.javalin.Javalin
 import io.javalin.apibuilder.ApiBuilder.path
@@ -25,6 +26,9 @@ class JavalinApp(private val port: Int) {
             path("api") {
                 path("users") {
                     post(UserController::createUser)
+                }
+                path("login"){
+                    post(LoginController::login)
                 }
             }
         }

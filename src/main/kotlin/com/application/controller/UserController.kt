@@ -1,9 +1,9 @@
 package com.application.controller
 
 
+import com.application.config.exception.BusinessException
 import com.application.dao.PhoneDAO
 import com.application.dao.UserDAO
-import com.application.domain.User
 import com.application.domain.UserDTO
 import com.application.service.PhoneService
 import com.application.service.UserService
@@ -14,17 +14,18 @@ object UserController {
     private val userService: UserService = UserService(UserDAO(), PhoneService(PhoneDAO()))
 
     fun createUser(ctx: Context) {
-
-        val user = ctx.validatedBody<UserDTO>().check({
-            !it.name.isNullOrBlank()
-        }, "Campo nome obrigatório").check({
-            !it.email.isNullOrBlank()
-        }, "Campo email obrigatório").check({
-            !it.password.isNullOrBlank()
-        }, "Campo password obrigatório").getOrThrow()
-
-        val userCreated = userService.createUser(user)
+        val userDTO = ctx.body<UserDTO>()
+        validUserFields(userDTO)
+        val userCreated = userService.createUser(userDTO)
         ctx.json(userCreated).status(201)
+    }
+
+    private fun validUserFields(userDTO: UserDTO) {
+        when {
+            userDTO?.name.isNullOrEmpty() -> throw BusinessException("Campo nome obrigatório")
+            userDTO?.email.isNullOrEmpty() -> throw BusinessException("Campo email obrigatório")
+            userDTO?.password.isNullOrEmpty() -> throw BusinessException("Campo password obrigatório")
+        }
     }
 
 

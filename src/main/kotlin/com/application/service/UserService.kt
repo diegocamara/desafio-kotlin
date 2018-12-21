@@ -2,6 +2,7 @@ package com.application.service
 
 import com.application.config.exception.BusinessException
 import com.application.dao.UserDAO
+import com.application.domain.User
 import com.application.domain.UserDTO
 import org.jetbrains.exposed.sql.StdOutSqlLogger
 import org.jetbrains.exposed.sql.addLogger
@@ -30,15 +31,7 @@ class UserService(private val userDAO: UserDAO, private val phoneService: PhoneS
             val storedPhones = phoneService.createPhones(it!!, storedUser)
         }
 
-        return UserDTO(
-            id = storedUser.id.value,
-            name = storedUser.name,
-            email = storedUser.email,
-            created = storedUser.created,
-            modified = storedUser.modified,
-            lastLogin = storedUser.lastLogin,
-            token = storedUser.token
-        )
+        return toUserDTO(storedUser)
     }
 
     private fun validUserEmail(userDTO: UserDTO) {
@@ -54,6 +47,27 @@ class UserService(private val userDAO: UserDAO, private val phoneService: PhoneS
         }
     }
 
+    fun findByEmailAndPassword(email: String?, password: String?): UserDTO? {
+        return transaction {
+            addLogger(StdOutSqlLogger)
+            val user: User = userDAO.findByEmailAndPassword(email, password)
+            toUserDTO(user)
+        }
+    }
+
     private fun randomId() = UUID.randomUUID().toString()
+
+    private fun toUserDTO(user: User): UserDTO {
+        return UserDTO(
+            id = user.id.value,
+            name = user.name,
+            email = user.email,
+            created = user.created,
+            modified = user.modified,
+            lastLogin = user.lastLogin,
+            token = user.token
+        )
+    }
+
 
 }
