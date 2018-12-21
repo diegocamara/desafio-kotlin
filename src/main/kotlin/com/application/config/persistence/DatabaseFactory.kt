@@ -1,5 +1,6 @@
 package com.application.config.persistence
 
+import com.application.domain.Phones
 import com.application.domain.Users
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
@@ -17,7 +18,7 @@ object DatabaseFactory {
         if(createSchema){
             transaction {
                 addLogger(StdOutSqlLogger)
-                SchemaUtils.create(Users)
+                SchemaUtils.create(Users, Phones)
             }
         }
     }

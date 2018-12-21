@@ -3,6 +3,7 @@ package com.application
 import com.application.config.persistence.DatabaseFactory
 import com.application.domain.UserDTO
 import com.application.config.exception.response.BadRequestErrorResponse
+import com.application.domain.PhoneDTO
 import com.application.util.toJsonObject
 import io.javalin.Javalin
 import io.javalin.json.JavalinJackson
@@ -23,7 +24,8 @@ class RestIntegrationTest : TestCase() {
     }
 
     fun `testar se o usuário foi criado 201`() {
-        val user = UserDTO(name = "User", email = "user@email.com", password = "showtime123")
+        val phones = listOf(PhoneDTO(ddd = "99", number = "99999999"))
+        val user = UserDTO(name = "User", email = "user@email.com", password = "showtime123", phones = phones)
         val jsonBody = JavalinJackson.getObjectMapper().writeValueAsString(user)
         val response = khttp.post(url = "$url/api/users", data = jsonBody)
         assertEquals(201, response.statusCode)
@@ -64,6 +66,8 @@ class RestIntegrationTest : TestCase() {
         val message = response.text.toJsonObject(BadRequestErrorResponse::class.java)
         assertEquals("Request body as UserDTO invalid - Campo password obrigatório", message.message)
     }
+
+
 
 }
 

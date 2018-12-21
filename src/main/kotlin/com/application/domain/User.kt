@@ -19,12 +19,12 @@ data class UserDTO(
     var id: Int? = null,
     var name: String? = null,
     var email: String? = null,
-    var phones: List<Phone>? = null,
+    var phones: List<PhoneDTO>? = null,
     var password: String? = null,
     var created: DateTime? = null,
     var modified: DateTime? = null,
-    @JsonProperty(value = "last_login") var lastLogin: DateTime? = null,
-    var token: String? = null
+    var token: String? = null,
+    @JsonProperty(value = "last_login") var lastLogin: DateTime? = null
 )
 
 class User(id: EntityID<Int>) : Entity<Int>(id) {
@@ -36,6 +36,7 @@ class User(id: EntityID<Int>) : Entity<Int>(id) {
     var modified by Users.modified
     var lastLogin by Users.lastLogin
     var token by Users.token
+    val phones by Phone referrersOn Phones.user
 }
 
 object Users : IntIdTable() {
