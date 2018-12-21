@@ -19,7 +19,7 @@ data class UserDTO(
     var id: Int? = null,
     var name: String? = null,
     var email: String? = null,
-    var phones: List<PhoneDTO>? = null,
+    var phones: List<PhoneDTO>? = listOf(),
     var password: String? = null,
     var created: DateTime? = null,
     var modified: DateTime? = null,

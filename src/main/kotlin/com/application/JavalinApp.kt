@@ -1,7 +1,7 @@
 @file:JvmName("EntryPoint")
 package com.application
 
-import com.application.config.exception.ExceptionHandler
+import com.application.config.exception.handler.ExceptionHandler
 import com.application.config.mapper.configureMapper
 import com.application.config.persistence.DatabaseFactory
 import com.application.controller.UserController

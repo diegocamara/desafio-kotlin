@@ -1,15 +1,17 @@
 package com.application.controller
 
 
+import com.application.dao.PhoneDAO
 import com.application.dao.UserDAO
 import com.application.domain.User
 import com.application.domain.UserDTO
+import com.application.service.PhoneService
 import com.application.service.UserService
 import io.javalin.Context
 
 object UserController {
 
-    private val userService: UserService = UserService(UserDAO())
+    private val userService: UserService = UserService(UserDAO(), PhoneService(PhoneDAO()))
 
     fun createUser(ctx: Context) {
 
