@@ -1,9 +1,10 @@
 @file:JvmName("EntryPoint")
 package com.application
 
+import com.application.config.exception.ExceptionHandler
 import com.application.config.mapper.configureMapper
-import com.application.controller.UserController
 import com.application.config.persistence.DatabaseFactory
+import com.application.controller.UserController
 import io.javalin.Javalin
 import io.javalin.apibuilder.ApiBuilder.path
 import io.javalin.apibuilder.ApiBuilder.post
@@ -14,8 +15,9 @@ class JavalinApp(private val port: Int) {
         configureMapper()
         val app = Javalin.create().apply {
             port(port)
-            exception(Exception::class.java) { e, _ -> e.printStackTrace() }
         }.start()
+
+        ExceptionHandler.register(app)
 
         app.get("/") { ctx -> ctx.json(mapOf("message" to " hora do show")) }
 

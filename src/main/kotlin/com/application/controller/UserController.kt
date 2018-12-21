@@ -11,12 +11,19 @@ object UserController {
 
     private val userService: UserService = UserService(UserDAO())
 
-    fun createUser(ctx: Context){
-        val user = ctx.body<UserDTO>()
+    fun createUser(ctx: Context) {
+
+        val user = ctx.validatedBody<UserDTO>().check({
+            !it.name.isNullOrBlank()
+        }, "Campo nome obrigatório").check({
+            !it.email.isNullOrBlank()
+        }, "Campo email obrigatório").check({
+            !it.password.isNullOrBlank()
+        }, "Campo password obrigatório").getOrThrow()
+
         val userCreated = userService.createUser(user)
         ctx.json(userCreated).status(201)
     }
-
 
 
 }

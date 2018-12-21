@@ -1,4 +1,4 @@
-package com.application
+package com.application.config.security
 
 import io.javalin.security.Role
 

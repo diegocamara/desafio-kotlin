@@ -11,7 +11,7 @@ import java.util.*
 class UserService(private val userDAO: UserDAO) {
 
     fun createUser(newUser: UserDTO): UserDTO {
-        val createDate = LocalDateTime.now()
+        val createDate = DateTime.now()
         newUser.created = createDate
         newUser.modified = createDate
         newUser.lastLogin = createDate

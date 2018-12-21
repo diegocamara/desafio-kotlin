@@ -17,13 +17,13 @@ import java.time.LocalDateTime
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class UserDTO(
     var id: Int? = null,
-    var name: String,
-    var email: String,
-    @JsonIgnore var phones: List<Phone>? = null,
+    var name: String? = null,
+    var email: String? = null,
+    var phones: List<Phone>? = null,
     var password: String? = null,
-    var created: LocalDateTime? = null,
-    var modified: LocalDateTime? = null,
-    @JsonProperty(value = "last_login") var lastLogin: LocalDateTime? = null,
+    var created: DateTime? = null,
+    var modified: DateTime? = null,
+    @JsonProperty(value = "last_login") var lastLogin: DateTime? = null,
     var token: String? = null
 )
 

@@ -11,12 +11,14 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 object DatabaseFactory {
 
-    fun init() {
+    fun init(createSchema: Boolean = false) {
         // Database.connect("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1", driver = "org.h2.Driver")
         Database.connect(hikari())
-        transaction {
-            addLogger(StdOutSqlLogger)
-            SchemaUtils.create(Users)
+        if(createSchema){
+            transaction {
+                addLogger(StdOutSqlLogger)
+                SchemaUtils.create(Users)
+            }
         }
     }
 

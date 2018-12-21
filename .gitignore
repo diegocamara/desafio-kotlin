@@ -40,3 +40,4 @@ build/
 .idea/.name
 .idea
 kotlin-ultimate/
+.attach_pid*
