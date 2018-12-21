@@ -14,6 +14,7 @@ class RestIntegrationTest : TestCase() {
     private lateinit var app: Javalin
     private val url = "http://localhost:7000"
 
+    
     override fun setUp() {
         DatabaseFactory.init(createSchema = true)
         app = JavalinApp(port = 7000).init()
