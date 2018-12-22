@@ -10,9 +10,12 @@ import org.jetbrains.exposed.sql.StdOutSqlLogger
 import org.jetbrains.exposed.sql.addLogger
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.joda.time.DateTime
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import java.util.*
 
 class UserService(private val userDAO: UserDAO, private val phoneService: PhoneService) {
+
+    private val passwordEncoder = BCryptPasswordEncoder()
 
     fun createUser(newUserDTO: NewUserDTO): UserDTO {
 
@@ -21,7 +24,7 @@ class UserService(private val userDAO: UserDAO, private val phoneService: PhoneS
         val newUser = UserDTO(
             name = newUserDTO.name,
             email = newUserDTO.email?.trim(),
-            password = newUserDTO.password,
+            password = passwordEncoder.encode(newUserDTO.password),
             phones = newUserDTO.phones
         )
 
@@ -61,7 +64,7 @@ class UserService(private val userDAO: UserDAO, private val phoneService: PhoneS
             addLogger(StdOutSqlLogger)
             val user: User? = userDAO.findByEmail(email)
 
-            if(login){
+            if (login) {
                 user?.lastLogin = DateTime.now()
             }
 
