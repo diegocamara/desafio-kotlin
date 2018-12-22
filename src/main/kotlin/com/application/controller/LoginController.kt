@@ -18,7 +18,7 @@ object LoginController {
         val loginDTO = ctx.body<LoginDTO>()
         validLoginFields(loginDTO)
         val userLogged = loginService.login(loginDTO)
-        ctx.json(userLogged)
+        ctx.json(userLogged!!)
     }
 
 

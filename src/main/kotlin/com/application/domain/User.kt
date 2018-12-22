@@ -20,7 +20,7 @@ data class UserDTO(
     var name: String? = null,
     var email: String? = null,
     var phones: List<PhoneDTO>? = listOf(),
-    var password: String? = null,
+    @JsonIgnore var password: String? = null,
     var created: DateTime? = null,
     var modified: DateTime? = null,
     var token: String? = null,

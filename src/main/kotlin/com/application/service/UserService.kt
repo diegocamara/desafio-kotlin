@@ -4,6 +4,7 @@ import com.application.config.exception.BusinessException
 import com.application.dao.UserDAO
 import com.application.domain.User
 import com.application.domain.UserDTO
+import com.application.dto.NewUserDTO
 import org.jetbrains.exposed.sql.StdOutSqlLogger
 import org.jetbrains.exposed.sql.addLogger
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -12,9 +13,16 @@ import java.util.*
 
 class UserService(private val userDAO: UserDAO, private val phoneService: PhoneService) {
 
-    fun createUser(newUser: UserDTO): UserDTO {
+    fun createUser(newUserDTO: NewUserDTO): UserDTO {
 
-        validUserEmail(newUser)
+        validUserEmail(newUserDTO)
+
+        val newUser = UserDTO(
+            name = newUserDTO.name,
+            email = newUserDTO.email,
+            password = newUserDTO.password,
+            phones = newUserDTO.phones
+        )
 
         val createDate = DateTime.now()
         newUser.created = createDate
@@ -34,8 +42,8 @@ class UserService(private val userDAO: UserDAO, private val phoneService: PhoneS
         return toUserDTO(storedUser)
     }
 
-    private fun validUserEmail(userDTO: UserDTO) {
-        if (existsUser(userDTO.email.toString())) {
+    private fun validUserEmail(newUserDTO: NewUserDTO) {
+        if (existsUser(newUserDTO.email.toString())) {
             throw BusinessException("E-mail já existente")
         }
     }
@@ -47,25 +55,26 @@ class UserService(private val userDAO: UserDAO, private val phoneService: PhoneS
         }
     }
 
-    fun findByEmailAndPassword(email: String?, password: String?): UserDTO? {
+    fun findByEmail(email: String?): UserDTO? {
         return transaction {
             addLogger(StdOutSqlLogger)
-            val user: User = userDAO.findByEmailAndPassword(email, password)
-            toUserDTO(user)
+            val user: User? = userDAO.findByEmail(email)
+            if (user != null) toUserDTO(user) else null
         }
     }
 
     private fun randomId() = UUID.randomUUID().toString()
 
-    private fun toUserDTO(user: User): UserDTO {
+    private fun toUserDTO(user: User?): UserDTO {
         return UserDTO(
-            id = user.id.value,
-            name = user.name,
-            email = user.email,
-            created = user.created,
-            modified = user.modified,
-            lastLogin = user.lastLogin,
-            token = user.token
+            id = user?.id?.value,
+            name = user?.name,
+            email = user?.email,
+            password = user?.password,
+            created = user?.created,
+            modified = user?.modified,
+            lastLogin = user?.lastLogin,
+            token = user?.token
         )
     }
 

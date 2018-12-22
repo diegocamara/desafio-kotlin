@@ -27,8 +27,9 @@ class UserDAO {
         return Users.select { Users.email eq email }.count()
     }
 
-    fun findByEmailAndPassword(userEmail: String?, userPassword: String?): User {
-       return User.find { (Users.email eq userEmail.toString()).and(Users.password eq userPassword.toString()) }.first()
+    fun findByEmail(userEmail: String?): User? {
+        return User.find { (Users.email eq userEmail.toString()) }
+            .firstOrNull()
     }
 
 
