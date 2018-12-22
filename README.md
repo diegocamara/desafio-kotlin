@@ -6,8 +6,11 @@ Aplicação de example usando microframeworks
 ``` ./gradle build```
 ## Run
 ``` ./gradle run```
-### Test
+## Test
 ``` ./gradle test```
+
+### Endereço padrão
+`http://localhost:7000`
 
 ## REST API
 `POST /api/users`
