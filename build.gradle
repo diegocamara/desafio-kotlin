@@ -29,6 +29,7 @@ dependencies {
     compile group: 'com.zaxxer', name: 'HikariCP', version: '3.2.0'    
     compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-joda', version: '2.9.8'
     compile group: 'org.springframework.security', name: 'spring-security-core', version: '5.1.2.RELEASE'
+    compile group: 'com.auth0', name: 'java-jwt', version: '3.4.1'
 
     testCompile 'junit:junit:4.12'
     testCompile 'khttp:khttp:0.1.0'
