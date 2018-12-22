@@ -141,7 +141,7 @@ class RestIntegrationTest : TestCase() {
         val phones = listOf(PhoneDTO(ddd = "99", number = "99999999"))
         val user = NewUserDTO(name = "User", email = "user123@email.com", password = "showtime123", phones = phones)
         val userJson = JavalinJackson.getObjectMapper().writeValueAsString(user)
-        val userCreatedResponse = khttp.post(url = "$url/api/users", data = userJson)
+        khttp.post(url = "$url/api/users", data = userJson)
 
         val loginDTO = LoginDTO(email = "user123@email.com", password = "showtime1234")
 
@@ -234,7 +234,7 @@ class RestIntegrationTest : TestCase() {
 
         val loginJson = JavalinJackson.getObjectMapper().writeValueAsString(loginDTO)
         val loginResponse1 = khttp.post(url = "$url/api/login", data = loginJson)
-        val loginUser1 = loginResponse1.text.toJsonObject(UserDTO::class.java)
+        loginResponse1.text.toJsonObject(UserDTO::class.java)
 
         val getResponse =
             khttp.get(

@@ -12,9 +12,7 @@ object DatabaseFactory {
     private val schemas: Array<Table> = arrayOf(Users, Phones)
 
     fun init(createSchema: Boolean = false) {
-        // Database.connect("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1", driver = "org.h2.Driver")
         Database.connect(hikari())
-
         if (createSchema) {
             transaction {
                 addLogger(StdOutSqlLogger)
