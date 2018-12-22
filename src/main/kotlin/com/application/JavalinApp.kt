@@ -1,18 +1,21 @@
 @file:JvmName("EntryPoint")
+
 package com.application
 
+import com.application.config.exception.BusinessException
 import com.application.config.exception.handler.ExceptionHandler
 import com.application.config.mapper.configureMapper
 import com.application.config.persistence.DatabaseFactory
 import com.application.controller.LoginController
 import com.application.controller.UserController
 import io.javalin.Javalin
-import io.javalin.apibuilder.ApiBuilder.path
-import io.javalin.apibuilder.ApiBuilder.post
+import io.javalin.apibuilder.ApiBuilder.*
+import org.eclipse.jetty.http.HttpStatus
 
-class JavalinApp(private val port: Int) {
+class JavalinApp(private val port: Int, private val createSchema: Boolean = false) {
 
     fun init(): Javalin {
+        DatabaseFactory.init(createSchema)
         configureMapper()
         val app = Javalin.create().apply {
             port(port)
@@ -26,11 +29,18 @@ class JavalinApp(private val port: Int) {
             path("api") {
                 path("users") {
                     post(UserController::createUser)
+                    path(":id") {
+                        get(UserController::findUserById)
+                    }
                 }
-                path("login"){
+                path("login") {
                     post(LoginController::login)
                 }
             }
+        }
+
+        app.before("/api/users/:id") {
+            it.header("Authorization") ?: throw BusinessException("Não autorizado", HttpStatus.UNAUTHORIZED_401)
         }
 
         return app
@@ -39,6 +49,6 @@ class JavalinApp(private val port: Int) {
 }
 
 fun main(args: Array<String>) {
-    DatabaseFactory.init()
+
     JavalinApp(7000).init()
 }

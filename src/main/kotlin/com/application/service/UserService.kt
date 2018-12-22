@@ -63,6 +63,14 @@ class UserService(private val userDAO: UserDAO, private val phoneService: PhoneS
         }
     }
 
+    fun findById(id: Int): UserDTO? {
+        return transaction {
+            addLogger(StdOutSqlLogger)
+            val user: User? = userDAO.findById(id)
+            if (user != null) toUserDTO(user) else null
+        }
+    }
+
     private fun randomId() = UUID.randomUUID().toString()
 
     private fun toUserDTO(user: User?): UserDTO {

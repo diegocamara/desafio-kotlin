@@ -4,23 +4,29 @@ import com.application.domain.Phones
 import com.application.domain.Users
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
-import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.SchemaUtils
-import org.jetbrains.exposed.sql.StdOutSqlLogger
-import org.jetbrains.exposed.sql.addLogger
+import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 
 object DatabaseFactory {
+
+    private val schemas: Array<Table> = arrayOf(Users, Phones)
 
     fun init(createSchema: Boolean = false) {
         // Database.connect("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1", driver = "org.h2.Driver")
         Database.connect(hikari())
 
-        if(createSchema){
+        if (createSchema) {
             transaction {
                 addLogger(StdOutSqlLogger)
-                SchemaUtils.create(Users, Phones)
+                SchemaUtils.create(*schemas)
             }
+        }
+    }
+
+    fun drop() {
+        transaction {
+            addLogger(StdOutSqlLogger)
+            SchemaUtils.drop(*schemas)
         }
     }
 

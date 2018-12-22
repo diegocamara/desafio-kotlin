@@ -32,5 +32,9 @@ class UserDAO {
             .firstOrNull()
     }
 
+    fun findById(id: Int): User? {
+        return User.findById(id)
+    }
+
 
 }

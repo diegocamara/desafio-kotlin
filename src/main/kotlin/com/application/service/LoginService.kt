@@ -4,6 +4,7 @@ import com.application.config.exception.BusinessException
 import com.application.domain.UserDTO
 import com.application.dto.LoginDTO
 import org.eclipse.jetty.http.HttpStatus
+import org.joda.time.DateTime
 
 class LoginService(private val userService: UserService) {
 
@@ -17,6 +18,8 @@ class LoginService(private val userService: UserService) {
         if (!userDTO?.password.equals(loginDTO?.password)) {
             throw BusinessException("Usuário e/ou senha inválidos", HttpStatus.UNAUTHORIZED_401)
         }
+
+        userDTO?.lastLogin = DateTime.now()
 
         return userDTO
     }
