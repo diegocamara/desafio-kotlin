@@ -2,6 +2,7 @@ package com.application.service
 
 import com.application.config.exception.BusinessException
 import com.application.dao.UserDAO
+import com.application.domain.PhoneDTO
 import com.application.domain.User
 import com.application.domain.UserDTO
 import com.application.dto.NewUserDTO
@@ -19,7 +20,7 @@ class UserService(private val userDAO: UserDAO, private val phoneService: PhoneS
 
         val newUser = UserDTO(
             name = newUserDTO.name,
-            email = newUserDTO.email,
+            email = newUserDTO.email?.trim(),
             password = newUserDTO.password,
             phones = newUserDTO.phones
         )
@@ -43,7 +44,7 @@ class UserService(private val userDAO: UserDAO, private val phoneService: PhoneS
     }
 
     private fun validUserEmail(newUserDTO: NewUserDTO) {
-        if (existsUser(newUserDTO.email.toString())) {
+        if (existsUser(newUserDTO.email?.trim().toString())) {
             throw BusinessException("E-mail já existente")
         }
     }
@@ -55,10 +56,15 @@ class UserService(private val userDAO: UserDAO, private val phoneService: PhoneS
         }
     }
 
-    fun findByEmail(email: String?): UserDTO? {
+    fun findByEmail(email: String?, login: Boolean): UserDTO? {
         return transaction {
             addLogger(StdOutSqlLogger)
             val user: User? = userDAO.findByEmail(email)
+
+            if(login){
+                user?.lastLogin = DateTime.now()
+            }
+
             if (user != null) toUserDTO(user) else null
         }
     }
@@ -74,6 +80,9 @@ class UserService(private val userDAO: UserDAO, private val phoneService: PhoneS
     private fun randomId() = UUID.randomUUID().toString()
 
     private fun toUserDTO(user: User?): UserDTO {
+
+        val phones = transaction { user?.phones?.map { phone -> PhoneDTO(ddd = phone.ddd, number = phone.number) } }
+
         return UserDTO(
             id = user?.id?.value,
             name = user?.name,
@@ -82,7 +91,9 @@ class UserService(private val userDAO: UserDAO, private val phoneService: PhoneS
             created = user?.created,
             modified = user?.modified,
             lastLogin = user?.lastLogin,
-            token = user?.token
+            token = user?.token,
+            phones = phones
+
         )
     }
 

@@ -10,16 +10,16 @@ class LoginService(private val userService: UserService) {
 
     fun login(loginDTO: LoginDTO): UserDTO? {
 
-        val userDTO: UserDTO? = userService.findByEmail(email = loginDTO.email) ?: throw BusinessException(
-            "Usuário e/ou senha inválidos",
-            HttpStatus.NOT_FOUND_404
-        )
+        val userDTO: UserDTO? =
+            userService.findByEmail(email = loginDTO.email, login = true) ?: throw BusinessException(
+                "Usuário e/ou senha inválidos",
+                HttpStatus.NOT_FOUND_404
+            )
 
         if (!userDTO?.password.equals(loginDTO?.password)) {
             throw BusinessException("Usuário e/ou senha inválidos", HttpStatus.UNAUTHORIZED_401)
         }
 
-        userDTO?.lastLogin = DateTime.now()
 
         return userDTO
     }

@@ -49,6 +49,5 @@ class JavalinApp(private val port: Int, private val createSchema: Boolean = fals
 }
 
 fun main(args: Array<String>) {
-
-    JavalinApp(7000).init()
+    JavalinApp(7000, true).init()
 }

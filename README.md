@@ -8,7 +8,7 @@ Aplicação de example usando microframeworks
 
 ## REST API
 `POST /api/users`
-```
+```json
 {
         "name": "Username",
         "email": "user@user.com",
@@ -23,3 +23,16 @@ Aplicação de example usando microframeworks
 
 ```
 
+`POST /api/login`
+```json
+{
+        "email": "user@user.com",
+        "password": "user123"
+       
+    }
+```
+`GET /api/users/:id`
+
+### Header
+
+Authorization - Bearer ${userToken}
