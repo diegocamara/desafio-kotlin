@@ -14,7 +14,6 @@ import com.fasterxml.jackson.datatype.joda.deser.LocalDateDeserializer
 import java.time.LocalDateTime
 
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
 data class UserDTO(
     var id: Int? = null,
     var name: String? = null,
@@ -29,6 +28,7 @@ data class UserDTO(
 
 class User(id: EntityID<Int>) : Entity<Int>(id) {
     companion object : EntityClass<Int, User>(Users)
+
     var name by Users.name
     var email by Users.email
     var password by Users.password
