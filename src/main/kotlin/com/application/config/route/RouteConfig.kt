@@ -1,11 +1,9 @@
 package com.application.config.route
 
-import com.application.JavalinApp
 import com.application.controller.LoginController
 import com.application.controller.UserController
 import io.javalin.Javalin
 import io.javalin.apibuilder.ApiBuilder
-import org.koin.standalone.get
 
 class RouteConfig(private val userController: UserController, private val loginController: LoginController) {
 

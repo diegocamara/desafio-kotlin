@@ -73,6 +73,7 @@ class UserServiceImpl(
 
             if (login) {
                 user?.lastLogin = DateTime.now()
+                user?.token = JwtUtil.sign(UserDTO(id = user?.id?.value), maxAgeInMinutes = 30)
             }
 
             if (user != null) toUserDTO(user) else null
