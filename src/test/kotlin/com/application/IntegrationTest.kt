@@ -1,19 +1,21 @@
 package com.application
 
 import com.application.authorization.BearerTokenAuthorization
+import com.application.config.JavalinAppConfig
 import com.application.config.exception.response.ApplicationErrorResponse
+import com.application.config.koin.KoinModuleConfig
 import com.application.config.persistence.DatabaseFactory
 import com.application.domain.PhoneDTO
 import com.application.domain.UserDTO
 import com.application.dto.NewUserDTO
 import com.application.dto.LoginDTO
-import com.application.util.toJsonObject
+import com.application.extension.string.toJsonObject
 import io.javalin.Javalin
 import io.javalin.json.JavalinJackson
 import junit.framework.TestCase
 import org.eclipse.jetty.http.HttpStatus
-import org.joda.time.DateTime
 import org.joda.time.DateTimeUtils
+import org.koin.standalone.StandAloneContext
 
 class RestIntegrationTest : TestCase() {
 
@@ -21,12 +23,11 @@ class RestIntegrationTest : TestCase() {
     private val url = "http://localhost:7000"
 
     override fun setUp() {
-        app = JavalinApp(port = 7000, createSchema = true).init()
+        app = JavalinAppConfig(createSchema = true).init()
     }
 
     override fun tearDown() {
         app.stop()
-        DatabaseFactory.drop()
         DateTimeUtils.setCurrentMillisSystem()
     }
 

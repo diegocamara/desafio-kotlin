@@ -1,11 +1,8 @@
-package com.application.config.exception.handler
+package com.application.config.handler.exception
 
 import com.application.config.exception.BusinessException
 import com.application.config.exception.response.ApplicationErrorResponse
 import com.fasterxml.jackson.annotation.JsonRootName
-import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException
-import io.javalin.BadRequestResponse
-import io.javalin.HttpResponseException
 import io.javalin.Javalin
 import org.eclipse.jetty.http.HttpStatus
 
