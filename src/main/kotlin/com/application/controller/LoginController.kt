@@ -1,18 +1,12 @@
 package com.application.controller
 
 import com.application.config.exception.BusinessException
-import com.application.dao.PhoneDAO
-import com.application.dao.UserDAO
-import com.application.domain.UserDTO
 import com.application.dto.LoginDTO
 import com.application.service.LoginService
-import com.application.service.PhoneService
-import com.application.service.UserService
+import com.application.service.impl.LoginServiceImpl
 import io.javalin.Context
 
-object LoginController {
-
-    private val loginService: LoginService = LoginService(UserService(UserDAO(), PhoneService(PhoneDAO())))
+class LoginController(private val loginService: LoginService) {
 
     fun login(ctx: Context) {
         val loginDTO = ctx.body<LoginDTO>()

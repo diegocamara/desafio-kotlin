@@ -8,6 +8,7 @@ group 'org'
 version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
+apply plugin: 'kotlin'
 apply plugin: 'org.flywaydb.flyway'
 apply plugin: 'application'
 
@@ -25,14 +26,15 @@ dependencies {
     compile "com.fasterxml.jackson.module:jackson-module-kotlin:2.9.+"
     compile 'io.javalin:javalin:2.4.0'
     compile 'org.jetbrains.exposed:exposed:0.11.2'
+    compile 'org.koin:koin-core:1.0.2'
     compile group: 'com.h2database', name: 'h2', version: '1.4.197'
     compile group: 'com.zaxxer', name: 'HikariCP', version: '3.2.0'    
     compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-joda', version: '2.9.8'
     compile group: 'org.springframework.security', name: 'spring-security-core', version: '5.1.2.RELEASE'
     compile group: 'com.auth0', name: 'java-jwt', version: '3.4.1'
-
     testCompile 'junit:junit:4.12'
     testCompile 'khttp:khttp:0.1.0'
+    testCompile 'org.koin:koin-test:1.0.2'
 }
 
 flyway {

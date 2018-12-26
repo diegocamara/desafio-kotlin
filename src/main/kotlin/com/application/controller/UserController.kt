@@ -2,19 +2,14 @@ package com.application.controller
 
 
 import com.application.config.exception.BusinessException
-import com.application.dao.PhoneDAO
-import com.application.dao.UserDAO
 import com.application.dto.NewUserDTO
-import com.application.service.PhoneService
 import com.application.service.UserService
 import io.javalin.Context
 import org.eclipse.jetty.http.HttpStatus
 import org.joda.time.DateTime
 import org.joda.time.Minutes
 
-object UserController {
-
-    private val userService: UserService = UserService(UserDAO(), PhoneService(PhoneDAO()))
+class UserController(private val userService: UserService) {
 
     fun createUser(ctx: Context) {
 
