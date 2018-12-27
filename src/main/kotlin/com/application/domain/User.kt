@@ -40,11 +40,11 @@ class User(id: EntityID<Int>) : Entity<Int>(id) {
 }
 
 object Users : IntIdTable() {
-    val name = Users.varchar("name", 50)
-    val email = Users.varchar("email", 50)
+    val name = Users.varchar("name", 255)
+    val email = Users.varchar("email", 255)
     var password = Users.varchar("password", 255)
     var created = Users.datetime("created").nullable()
     var modified = Users.datetime("modified").nullable()
-    var lastLogin = Users.datetime("lastLogin").nullable()
+    var lastLogin = Users.datetime("last_login").nullable()
     var token = Users.varchar("token", 255).nullable()
 }

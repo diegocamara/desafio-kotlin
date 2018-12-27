@@ -9,6 +9,9 @@ Aplicação de example usando microframeworks
 ## Test
 ``` ./gradle test```
 
+## Run Migrations
+``` ./gradle flywayMigrate```
+
 ### Endereço padrão
 `http://localhost:7000`
 
