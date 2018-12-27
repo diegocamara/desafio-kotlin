@@ -10,6 +10,3 @@ open class BusinessException(message: String, statusCode: Int = HttpStatus.BAD_R
     val statusCode: Int = statusCode
 
 }
-
-
-
