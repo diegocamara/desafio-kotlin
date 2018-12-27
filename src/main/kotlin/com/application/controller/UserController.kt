@@ -44,9 +44,9 @@ class UserController(private val userService: UserService) {
 
     private fun validUserFields(newUserDTO: NewUserDTO) {
         when {
-            newUserDTO?.name.isNullOrEmpty() -> throw BusinessException("Campo nome obrigatório")
-            newUserDTO?.email.isNullOrEmpty() -> throw BusinessException("Campo email obrigatório")
-            newUserDTO?.password.isNullOrEmpty() -> throw BusinessException("Campo password obrigatório")
+            newUserDTO.name.isNullOrEmpty() -> throw BusinessException("Campo nome obrigatório")
+            newUserDTO.email.isNullOrEmpty() -> throw BusinessException("Campo email obrigatório")
+            newUserDTO.password.isNullOrEmpty() -> throw BusinessException("Campo password obrigatório")
         }
     }
 

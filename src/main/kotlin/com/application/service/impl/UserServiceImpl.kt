@@ -47,7 +47,7 @@ class UserServiceImpl(
         }
 
         newUser.phones.let {
-            val storedPhones = phoneService.createPhones(it!!, storedUser)
+            phoneService.createPhones(it!!, storedUser)
         }
 
         return toUserDTO(storedUser)

@@ -22,7 +22,7 @@ class LoginServiceImpl(private val userService: UserService, private val passwor
 
 
 
-        if (!passwordEncoder.matches(loginDTO?.password, userDTO?.password)) {
+        if (!passwordEncoder.matches(loginDTO.password, userDTO?.password)) {
             throw BusinessException("Usuário e/ou senha inválidos", HttpStatus.UNAUTHORIZED_401)
         }
 
