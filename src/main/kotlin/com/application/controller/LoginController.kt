@@ -5,10 +5,11 @@ import com.application.dto.LoginDTO
 import com.application.service.LoginService
 import com.application.service.impl.LoginServiceImpl
 import io.javalin.Context
+import io.javalin.apibuilder.ApiBuilder
 
 class LoginController(private val loginService: LoginService) {
 
-    fun login(ctx: Context) {
+    private fun login(ctx: Context) {
         val loginDTO = ctx.body<LoginDTO>()
         validLoginFields(loginDTO)
         val userLogged = loginService.login(loginDTO)
@@ -24,6 +25,14 @@ class LoginController(private val loginService: LoginService) {
         }
 
 
+    }
+
+    fun endpointGroup() {
+        ApiBuilder.path("api") {
+            ApiBuilder.path("login") {
+                ApiBuilder.post("?id",this::login)
+            }
+        }
     }
 
 
