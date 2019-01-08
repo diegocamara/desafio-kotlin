@@ -1,41 +1,38 @@
 package com.application.util
 
 import com.fasterxml.jackson.annotation.JsonInclude
-import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.swagger.annotations.Api
-import io.swagger.jaxrs.Reader
-import io.swagger.jaxrs.config.BeanConfig
-import io.swagger.models.Swagger
+import io.swagger.v3.jaxrs2.Reader
+import io.swagger.v3.oas.annotations.OpenAPIDefinition
+import io.swagger.v3.oas.integration.SwaggerConfiguration
+import io.swagger.v3.oas.models.OpenAPI
 import org.reflections.Reflections
+import java.io.File
 
 object SwaggerParser {
 
-    @Throws(JsonProcessingException::class)
-    fun getSwaggerJson(packageName: String): String {
-        val swagger = getSwagger(packageName)
-        return swaggerToJson(swagger)
+    fun generateDocs(packageName: String) {
+        val openApi = getOpenAPI(packageName)
+        writeApiToJson(openApi)
     }
 
-    fun getSwagger(packageName: String): Swagger {
+    private fun getOpenAPI(packageName: String): OpenAPI {
         val reflections = Reflections(packageName)
-        val beanConfig = BeanConfig()
-        beanConfig.resourcePackage = packageName
-        beanConfig.scan = true
-        beanConfig.scanAndRead()
-        val swagger = beanConfig.swagger
-
-        val reader = Reader(swagger)
-
         val apiClasses = reflections.getTypesAnnotatedWith(Api::class.java)
+        apiClasses.add(reflections.getTypesAnnotatedWith(OpenAPIDefinition::class.java).first())
+        val swaggerConfiguration =
+            SwaggerConfiguration().resourcePackages(mutableSetOf(packageName)).prettyPrint(true)
+        val reader = Reader(swaggerConfiguration)
         return reader.read(apiClasses)
     }
 
-    @Throws(JsonProcessingException::class)
-    fun swaggerToJson(swagger: Swagger): String {
+    private fun writeApiToJson(openAPI: OpenAPI) {
         val objectMapper = ObjectMapper()
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY)
-        return objectMapper.writeValueAsString(swagger)
+        val jsonFile = File("src/main/resources/public/docs/swagger.json")
+        jsonFile.createNewFile()
+        objectMapper.writeValue(jsonFile, openAPI)
     }
 
 }

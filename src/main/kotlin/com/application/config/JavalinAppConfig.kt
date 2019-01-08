@@ -12,7 +12,9 @@ import com.application.constants.ApplicationConstants
 import com.application.util.SwaggerParser
 import io.javalin.Javalin
 import io.javalin.JavalinEvent
-import io.swagger.annotations.SwaggerDefinition
+import io.swagger.v3.oas.annotations.OpenAPIDefinition
+import io.swagger.v3.oas.annotations.info.Info
+import io.swagger.v3.oas.annotations.servers.Server
 import org.koin.core.KoinProperties
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.StandAloneContext.startKoin
@@ -20,17 +22,17 @@ import org.koin.standalone.StandAloneContext.stopKoin
 import org.koin.standalone.getProperty
 import org.koin.standalone.inject
 
-@SwaggerDefinition(
-    host = "localhost:4567", //
-    schemes = [SwaggerDefinition.Scheme.HTTP, SwaggerDefinition.Scheme.HTTPS], //
-    consumes = ["application/json"], //
-    produces = ["application/json"]
+@OpenAPIDefinition(
+    info = Info(title = "SuperAPI", version = "1.0.0"),
+    servers = [Server(url = "http://localhost:8080/")]
 )
 class JavalinAppConfig(private val createSchema: Boolean = false) : KoinComponent {
 
     private val routeConfig: RouteConfig by inject()
 
     fun init(): Javalin {
+
+        SwaggerParser.generateDocs("com.application")
 
         startKoin(
             listOf(KoinModuleConfig.applicationModule),
@@ -46,20 +48,11 @@ class JavalinAppConfig(private val createSchema: Boolean = false) : KoinComponen
         }.event(JavalinEvent.SERVER_STOPPING) {
             stopKoin()
             DatabaseFactory.drop()
-        }.start()
+        }.enableStaticFiles("/public").start()
 
         ExceptionHandler.register(app)
         BeforeHandler.register(app)
         routeConfig.register(app)
-
-        app.handlerMetaInfo.forEach{
-
-            println(it)
-
-        }
-
-        val swaggerJson = SwaggerParser.getSwaggerJson("com.application")
-        println(swaggerJson)
 
         return app
     }

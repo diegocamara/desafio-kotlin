@@ -1,19 +1,31 @@
 package com.application.controller
 
 import com.application.config.exception.BusinessException
+import com.application.domain.UserDTO
 import com.application.dto.LoginDTO
 import com.application.service.LoginService
-import com.application.service.impl.LoginServiceImpl
 import io.javalin.Context
 import io.javalin.apibuilder.ApiBuilder
+import io.swagger.annotations.Api
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.tags.Tag
+import javax.ws.rs.POST
+import javax.ws.rs.Path
+import javax.ws.rs.Produces
 
+@Api
+@Path("Login")
+@Produces("application/json")
+@Tag(name = "Login")
 class LoginController(private val loginService: LoginService) {
 
-    private fun login(ctx: Context) {
-        val loginDTO = ctx.body<LoginDTO>()
+    @POST
+    @Operation(
+        summary = "Login"
+    )
+    fun login(loginDTO: LoginDTO): UserDTO? {
         validLoginFields(loginDTO)
-        val userLogged = loginService.login(loginDTO)
-        ctx.json(userLogged!!)
+        return loginService.login(loginDTO)
     }
 
 
@@ -27,10 +39,10 @@ class LoginController(private val loginService: LoginService) {
 
     }
 
-    fun endpointGroup() {
-        ApiBuilder.path("api") {
-            ApiBuilder.path("login") {
-                ApiBuilder.post("?id",this::login)
+    fun registerResources() {
+        ApiBuilder.path("login") {
+            ApiBuilder.post { ctx ->
+                this.login(ctx.body<LoginDTO>())?.let { ctx.json(it) }
             }
         }
     }
