@@ -8,6 +8,7 @@ import com.application.config.koin.KoinModuleConfig
 import com.application.config.mapper.configureMapper
 import com.application.config.persistence.DatabaseFactory
 import com.application.config.route.RouteConfig
+import com.application.config.template.TemplateResolver
 import com.application.constants.ApplicationConstants
 import com.application.util.SwaggerParser
 import io.javalin.Javalin
@@ -53,6 +54,8 @@ class JavalinAppConfig(private val createSchema: Boolean = false) : KoinComponen
         ExceptionHandler.register(app)
         BeforeHandler.register(app)
         routeConfig.register(app)
+
+        TemplateResolver.process("index")
 
         return app
     }
