@@ -2,6 +2,7 @@ package com.application.util
 
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.SerializationFeature
 import io.swagger.annotations.Api
 import io.swagger.v3.jaxrs2.Reader
 import io.swagger.v3.oas.annotations.OpenAPIDefinition
@@ -29,7 +30,8 @@ object SwaggerParser {
 
     private fun writeApiToJson(openAPI: OpenAPI) {
         val objectMapper = ObjectMapper()
-        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY)
+        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL)
+        objectMapper.enable(SerializationFeature.WRITE_ENUMS_USING_TO_STRING)
         val jsonFile = File("src/main/resources/public/docs/swagger.json")
         jsonFile.createNewFile()
         objectMapper.writeValue(jsonFile, openAPI)

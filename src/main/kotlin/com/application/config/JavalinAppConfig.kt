@@ -24,7 +24,7 @@ import org.koin.standalone.inject
 
 @OpenAPIDefinition(
     info = Info(title = "SuperAPI", version = "1.0.0"),
-    servers = [Server(url = "http://localhost:8080/")]
+    servers = [Server(url = "http://localhost:8080/api")]
 )
 class JavalinAppConfig(private val createSchema: Boolean = false) : KoinComponent {
 
@@ -48,7 +48,7 @@ class JavalinAppConfig(private val createSchema: Boolean = false) : KoinComponen
         }.event(JavalinEvent.SERVER_STOPPING) {
             stopKoin()
             DatabaseFactory.drop()
-        }.enableStaticFiles("/public").start()
+        }.enableStaticFiles("/public").disableRequestCache().start()
 
         ExceptionHandler.register(app)
         BeforeHandler.register(app)

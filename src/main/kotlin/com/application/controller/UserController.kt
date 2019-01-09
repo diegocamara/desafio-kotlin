@@ -9,16 +9,27 @@ import com.application.service.UserService
 import io.javalin.apibuilder.ApiBuilder
 import io.swagger.annotations.Api
 import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType
+import io.swagger.v3.oas.annotations.security.SecurityRequirement
+import io.swagger.v3.oas.annotations.security.SecurityScheme
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.eclipse.jetty.http.HttpStatus
 import org.joda.time.DateTime
 import org.joda.time.Minutes
 import javax.ws.rs.*
+import javax.ws.rs.core.HttpHeaders
 
 @Api
 @Path(USERS_PATH)
 @Produces("application/json")
 @Tag(name = "Users API v1.0.0-SHOWTIME")
+@SecurityScheme(
+    name = "jwt",
+    type = SecuritySchemeType.APIKEY,
+    `in` = SecuritySchemeIn.HEADER,
+    paramName = "Authorization"
+)
 class UserController(private val userService: UserService) {
 
     companion object {
@@ -35,10 +46,12 @@ class UserController(private val userService: UserService) {
     }
 
     @GET
+    @Path("/{id}")
     @Operation(
         summary = "Find a user"
     )
-    fun findUserById(@HeaderParam(value = "Authorization") token: String, @PathParam(value = "userId") userId: String): UserDTO {
+    @SecurityRequirement(name = "jwt")
+    fun findUserById(token: String, @PathParam(value = "id") userId: String): UserDTO {
 
         val storedUser = userService.findById(userId.toInt())
 
