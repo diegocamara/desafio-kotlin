@@ -12,6 +12,8 @@ import org.apache.commons.io.FileUtils
 import org.apache.commons.lang3.RandomStringUtils
 import org.reflections.Reflections
 import java.io.File
+import java.nio.file.Files
+import java.nio.file.Paths
 import javax.ws.rs.Path
 
 object SwaggerParser {
@@ -39,12 +41,13 @@ object SwaggerParser {
 
         val docsDirectory = File("${SwaggerParser::class.java.classLoader.getResource("public/docs/")?.path}")
 
-        FileUtils.cleanDirectory(docsDirectory)
+        if (docsDirectory.exists()) {
+            FileUtils.cleanDirectory(docsDirectory)
+            val jsonFile = File("${docsDirectory.path}/$fileName")
+            jsonFile.createNewFile()
+            objectMapper.writeValue(jsonFile, openAPI)
+        }
 
-        val jsonFile = File("${docsDirectory.path}/$fileName")
-        jsonFile.createNewFile()
-
-        objectMapper.writeValue(jsonFile, openAPI)
         return fileName
     }
 
