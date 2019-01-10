@@ -7,21 +7,22 @@ import com.application.domain.UserDTO
 import com.application.dto.NewUserDTO
 import com.application.service.UserService
 import io.javalin.apibuilder.ApiBuilder
-import io.swagger.annotations.Api
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType
-import io.swagger.v3.oas.annotations.parameters.RequestBody
-import io.swagger.v3.oas.annotations.security.SecurityRequirement
+import io.swagger.v3.oas.annotations.media.Content
+import io.swagger.v3.oas.annotations.media.Schema
+import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.security.SecurityScheme
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.eclipse.jetty.http.HttpStatus
 import org.joda.time.DateTime
 import org.joda.time.Minutes
-import javax.ws.rs.*
-import javax.ws.rs.core.HttpHeaders
+import javax.ws.rs.GET
+import javax.ws.rs.POST
+import javax.ws.rs.Path
+import javax.ws.rs.PathParam
 
-@Api
 @Path(USERS_PATH)
 @Tag(name = "Users API v1.0.0-SHOWTIME")
 @SecurityScheme(
@@ -46,9 +47,20 @@ class UserController(private val userService: UserService) {
     }
 
     @GET
-    @Path("/{id}")
-    @SecurityRequirement(name = "jwt")
-    fun findUserById(token: String,  @PathParam("id") userId: String): UserDTO {
+    @Path("/{petId}")
+    @Operation(
+        summary = "Get user by user name",
+        responses = [
+            ApiResponse(
+                description = "The user",
+                content = [Content(
+                    mediaType = "application/json",
+                    schema = Schema(implementation = UserDTO::class)
+                )]
+            ),
+            ApiResponse(responseCode = "400", description = "User not found")]
+    )
+    fun findUserById(token: String, @PathParam("id") userId: String): UserDTO {
 
         val storedUser = userService.findById(userId.toInt())
 

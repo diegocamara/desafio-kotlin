@@ -12,6 +12,7 @@ import org.apache.commons.io.FileUtils
 import org.apache.commons.lang3.RandomStringUtils
 import org.reflections.Reflections
 import java.io.File
+import javax.ws.rs.Path
 
 object SwaggerParser {
 
@@ -22,7 +23,7 @@ object SwaggerParser {
 
     private fun getOpenAPI(packageName: String): OpenAPI {
         val reflections = Reflections(packageName)
-        val apiClasses = reflections.getTypesAnnotatedWith(Api::class.java)
+        val apiClasses = reflections.getTypesAnnotatedWith(Path::class.java)
         apiClasses.add(reflections.getTypesAnnotatedWith(OpenAPIDefinition::class.java).first())
         val swaggerConfiguration =
             SwaggerConfiguration().resourcePackages(mutableSetOf(packageName)).readAllResources(true)
@@ -37,11 +38,15 @@ object SwaggerParser {
         val fileName = "swagger_version-${RandomStringUtils.randomAlphanumeric(10)}.json"
         val docsDirectory = File("${SwaggerParser::class.java.classLoader.getResource("public/docs/").path}")
 
+        if (!docsDirectory.exists()) {
+            docsDirectory.mkdirs()
+        }
+
         FileUtils.cleanDirectory(docsDirectory)
 
         val jsonFile = File("${docsDirectory.path}/$fileName")
         jsonFile.createNewFile()
-        
+
         objectMapper.writeValue(jsonFile, openAPI)
         return fileName
     }
