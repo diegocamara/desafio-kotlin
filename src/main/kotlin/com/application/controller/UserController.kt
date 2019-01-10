@@ -7,12 +7,16 @@ import com.application.domain.UserDTO
 import com.application.dto.NewUserDTO
 import com.application.service.UserService
 import io.javalin.apibuilder.ApiBuilder
+import io.swagger.v3.oas.annotations.Hidden
 import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.Parameter
+import io.swagger.v3.oas.annotations.enums.ParameterIn
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType
 import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
+import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.security.SecurityScheme
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.eclipse.jetty.http.HttpStatus
@@ -47,20 +51,18 @@ class UserController(private val userService: UserService) {
     }
 
     @GET
-    @Path("/{petId}")
+    @Path("/{id}")
     @Operation(
-        summary = "Get user by user name",
-        responses = [
-            ApiResponse(
-                description = "The user",
-                content = [Content(
-                    mediaType = "application/json",
-                    schema = Schema(implementation = UserDTO::class)
-                )]
-            ),
-            ApiResponse(responseCode = "400", description = "User not found")]
+        summary = "Get user by user name"
     )
-    fun findUserById(token: String, @PathParam("id") userId: String): UserDTO {
+    @SecurityRequirement(name = "jwt")
+    fun findUserById(
+        @Parameter(
+            name = "Authorization",
+            `in` = ParameterIn.HEADER,
+            hidden = true
+        ) token: String, @PathParam("id") userId: String
+    ): UserDTO {
 
         val storedUser = userService.findById(userId.toInt())
 

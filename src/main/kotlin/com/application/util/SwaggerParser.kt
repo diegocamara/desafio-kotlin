@@ -36,11 +36,8 @@ object SwaggerParser {
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL)
         objectMapper.enable(SerializationFeature.WRITE_ENUMS_USING_TO_STRING)
         val fileName = "swagger_version-${RandomStringUtils.randomAlphanumeric(10)}.json"
-        val docsDirectory = File("${SwaggerParser::class.java.classLoader.getResource("public/docs/").path}")
 
-        if (!docsDirectory.exists()) {
-            docsDirectory.mkdirs()
-        }
+        val docsDirectory = File("${SwaggerParser::class.java.classLoader.getResource("public/docs/")?.path}")
 
         FileUtils.cleanDirectory(docsDirectory)
 
