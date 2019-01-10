@@ -11,6 +11,7 @@ import io.swagger.annotations.Api
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType
+import io.swagger.v3.oas.annotations.parameters.RequestBody
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.security.SecurityScheme
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -22,7 +23,6 @@ import javax.ws.rs.core.HttpHeaders
 
 @Api
 @Path(USERS_PATH)
-@Produces("application/json")
 @Tag(name = "Users API v1.0.0-SHOWTIME")
 @SecurityScheme(
     name = "jwt",
@@ -47,11 +47,8 @@ class UserController(private val userService: UserService) {
 
     @GET
     @Path("/{id}")
-    @Operation(
-        summary = "Find a user"
-    )
     @SecurityRequirement(name = "jwt")
-    fun findUserById(token: String, @PathParam(value = "id") userId: String): UserDTO {
+    fun findUserById(token: String,  @PathParam("id") userId: String): UserDTO {
 
         val storedUser = userService.findById(userId.toInt())
 

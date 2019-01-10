@@ -33,7 +33,9 @@ class JavalinAppConfig(private val createSchema: Boolean = false) : KoinComponen
 
     fun init(): Javalin {
 
-        SwaggerParser.generateDocs("com.application")
+        val docFileName = SwaggerParser.generateDocs("com.application")
+        TemplateResolver.process("index-template", docFileName)
+
 
         startKoin(
             listOf(KoinModuleConfig.applicationModule),
@@ -55,7 +57,7 @@ class JavalinAppConfig(private val createSchema: Boolean = false) : KoinComponen
         BeforeHandler.register(app)
         routeConfig.register(app)
 
-        TemplateResolver.process("index")
+
 
         return app
     }

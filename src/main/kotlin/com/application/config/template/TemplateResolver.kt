@@ -4,7 +4,11 @@ import org.thymeleaf.TemplateEngine
 import org.thymeleaf.context.Context
 import org.thymeleaf.templatemode.TemplateMode
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver
+import java.io.File
+import java.io.FileWriter
 import java.io.StringWriter
+import java.nio.file.Files
+import java.nio.file.Paths
 import java.util.*
 
 
@@ -20,9 +24,9 @@ object TemplateResolver {
         return resolver
     }
 
-    fun context(): Context {
+    fun context(docFileName: String): Context {
         val context = Context(Locale.getDefault())
-        context.setVariable("swaggerJsonFileUrl", "http://localhost:8080/docs/swagger_${UUID.randomUUID()}.json")
+        context.setVariable("swaggerJsonFileUrl", "http://localhost:8080/docs/$docFileName")
         return context
     }
 
@@ -32,12 +36,10 @@ object TemplateResolver {
         return engine
     }
 
-//    http://localhost:8080/docs/swagger.json
-
-    fun process(templateSpec: String) {
-        val stringWriter = StringWriter()
-        templateEngine().process(templateSpec, context(), stringWriter)
-        println(stringWriter.toString())
+    fun process(templateSpec: String, docFileName: String) {
+        val indexPath = "${TemplateResolver::class.java.classLoader.getResource("public/swagger-ui/").path}/index.html"
+        val fileWriter = FileWriter(indexPath)
+        templateEngine().process(templateSpec, context(docFileName), fileWriter)
     }
 
 }
