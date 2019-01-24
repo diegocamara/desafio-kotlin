@@ -14,6 +14,7 @@ class RouteConfig(private val userController: UserController, private val loginC
                 userController.registerResources()
                 loginController.registerResources()
             }
+//            ApiBuilder.get("apidocs", SwaggerRenderer("public/${SwaggerParser.scan("com.application")}"))
         }
 
     }
